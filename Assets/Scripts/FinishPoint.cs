@@ -2,26 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-
 public class FinishPoint : MonoBehaviour
 {
-    private Animator _animator;
+    [SerializeField] private ChestOpener _chest;
+    [SerializeField] private RoadLampLight _lamp;
 
-    private void Start()
+    private static int _enemiesCount = 2;
+
+    private Enemy[] _enemies = new Enemy[_enemiesCount];
+
+    public void Activate()
     {
-        _animator = GetComponent<Animator>();
+        _chest.Activate();
+        _lamp.On();
+        DestroyEnemies();
     }
 
-    private void OnTriggerEnter2D(Collider2D chest)
+    private void DestroyEnemies()
     {
-        if (chest.TryGetComponent<Player>(out Player Player))
-            _animator.SetBool(ACChestGolden.Params.EnteredPlayer, true);
-    }
+        _enemies = FindObjectsOfType<Enemy>();
 
-    private void OnTriggerExit2D(Collider2D chest)
-    {
-        if (chest.TryGetComponent<Player>(out Player Player))
-            _animator.SetBool(ACChestGolden.Params.EnteredPlayer, false);
+        foreach (Enemy enemy in _enemies)
+            enemy.Destroy();
     }
 }
