@@ -2,27 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(EnemiesVault))]
+
 public class FinishPoint : MonoBehaviour
 {
     [SerializeField] private ChestOpener _chest;
     [SerializeField] private RoadLampLight _lamp;
 
-    private static int _enemiesCount = 2;
+    private EnemiesVault _enemies;
 
-    private Enemy[] _enemies = new Enemy[_enemiesCount];
+    private void Start()
+    {
+        _enemies = EnemiesVault.GetStorage();
+    }
 
     public void Activate()
     {
         _chest.Activate();
         _lamp.On();
-        DestroyEnemies();
-    }
-
-    private void DestroyEnemies()
-    {
-        _enemies = FindObjectsOfType<Enemy>();
-
-        foreach (Enemy enemy in _enemies)
-            enemy.Destroy();
+        _enemies.Destroy();
     }
 }

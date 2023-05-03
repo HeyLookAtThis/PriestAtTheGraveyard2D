@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(EnemiesVault))]
+
 public class EnemyTriggerCoin : MonoBehaviour
 {
     [SerializeField] private Enemy _ghost;
@@ -12,8 +14,10 @@ public class EnemyTriggerCoin : MonoBehaviour
 
     public void SpawnEnemies()
     {
-        InstantiateEnemy(_skeleton, _gravestone);
-        InstantiateEnemy(_ghost, _statue);
+        EnemiesVault enemies = EnemiesVault.GetStorage();
+
+        enemies.Add(InstantiateEnemy(_skeleton, _gravestone));
+        enemies.Add(InstantiateEnemy(_ghost, _statue));
     }
 
     public void Destroy()
@@ -21,7 +25,7 @@ public class EnemyTriggerCoin : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void InstantiateEnemy(Enemy enemy, InstantiationPoint point)
+    private Enemy InstantiateEnemy(Enemy enemy, InstantiationPoint point)
     {
         float distanceFromCenter = 2.0f;
         float rotationAmount = 180;
@@ -30,9 +34,8 @@ public class EnemyTriggerCoin : MonoBehaviour
         position.y += distanceFromCenter;
 
         Quaternion rotation = Quaternion.identity;
-        rotation.y += rotationAmount;
+        rotation.y += rotationAmount;        
 
-        Instantiate(enemy, position, rotation);
+        return Instantiate(enemy, position, rotation);
     }
-
 }
